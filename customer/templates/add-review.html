@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %} check-out {% endblock %}
+
+{% block main_section %}
+{% if messages %}
+<div class="alert-messages">
+    {% for msg in messages %}
+    <div class="text-center alert {% if msg.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}">
+        {{ msg }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="container">
+    <div class="row my-5">
+        <div class="col-6">
+            <div class="card" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        {% if product_obj.image %}
+                        <img src="{{ product_obj.image.url }}" class="img-fluid rounded-start" alt="...">
+                        {% else %}
+                        <img src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" class="img-fluid rounded-start"
+                            alt="...">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product_obj.product_name }}</h5>
+                            <p class="card-text">₹ {{ product_obj.price }}</p>
+                            <p class="card-text"><small class="text-body-secondary"></small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="review" class="form-label">Review</label>
+                    <input type="text" class="form-control" name="review">
+                    <label for="rating" class="form-label">Rating</label>
+                    <input type="text" class="form-control" name="rating" placeholder="Rate from 1 to 5">
+                </div>
+                <button type="submit" class="btn btn-primary form-control">Add review</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

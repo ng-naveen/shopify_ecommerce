@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %} product-view {% endblock %}
+
+{% block main_section %}
+{% if messages %}
+<div class="alert-messages">
+    {% for msg in messages %}
+    <div class="text-center alert {% if msg.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}">
+        {{ msg }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                {% if product_obj.image %}
+                <img class="card-img-top mb-5 mb-md-0" src="{{ product_obj.image.url }}" alt="..." />
+                {% else %}
+                <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg"
+                    alt="..."/>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <div class="small mb-1">SKU: BST-498</div>
+                <h1 class="display-5 fw-bolder">{{ product_obj.product_name }}</h1>
+                <div class="fs-5 mb-5">
+                    <span>₹ {{ product_obj.price }}</span>
+                </div>
+                <p class="lead">{{ product_obj.description }}</p>
+                <div class="d-flex">
+                    <form action="{% url 'cart-add' product_obj.id %}" method="post" class="d-flex">
+                        {% csrf_token %}
+                        <input class="form-control text-center me-3" id="inputQuantity" type="number" value="1"
+                            style="max-width: 3rem" name="quantity"/>
+                        <button type="submit" class="btn btn-outline-dark flex-shrink-0">
+                            <i class="bi-cart-fill me-1"></i>
+                            Add to cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="testimonials">
+        <div class="testimonial-heading">
+            <span>Reviews</span>
+            <h4>Avg Rating: {{ product_obj.get_avg_rating }}</h4>
+            <h4>Clients Says</h4>
+        </div>
+        {% if product_obj.get_reviews %}
+        {% for review_obj in product_obj.get_reviews %}
+        <div class="testimonial-box-container">
+            <div class="testimonial-box">
+                <div class="box-top">
+                    <div class="profile">
+                        <div class="profile-img">
+                            <img src="https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png" />
+                        </div>
+                        <div class="name-user">
+                            <strong>{{ review_obj.user }}</strong>
+                            <span>@{{ review_obj.user }}</span>
+                        </div>
+                    </div>
+                    <div class="reviews">
+                        {% for i in stars %}
+                        {% if i <=  review_obj.rating %}
+                        <i class="bi bi-star-fill me-1"></i>
+                        {% else %}
+                        <i class="bi bi-star me-1"></i>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="client-comment">
+                    <p>{{ review_obj.review }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No reviews yet</p>
+        {% endif %}
+      </section>
+      <script src='https://kit.fontawesome.com/c8e4d183c2.js'></script>
+    </section>
+    <!-- <div class="container">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <h1>Reviews</h1>
+                {% if product_obj.get_reviews %}
+                {% for review_obj in product_obj.get_reviews %}
+                <div>
+                    Review: <p class="row border rounded-pill">{{ review_obj.review }}</p>
+                    Rating: <p class="row border rounded-pill">{{ review_obj.rating }}</p>
+                    User: <p class="row border rounded-pill">{{ review_obj.user }}</p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="row border rounded-pill">
+                    <p>No reviews added.</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-4"></div>
+        </div>
+    </div> -->
+</section>
+{% endblock%}

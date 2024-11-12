@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %} cart {% endblock %}
+
+{% block main_section %}
+{% if messages %}
+<div class="alert-messages">
+    {% for msg in messages %}
+    <div class="text-center alert {% if msg.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}">
+        {{ msg }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="container">
+    {% for cart_obj in cart_objs %}
+    <div class="row my-5">
+        <div class="col-6"></div>
+        <div class="col-6">
+            <div class="card" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        {% if cart_obj.product.image %}
+                        <img src="{{ cart_obj.product.image.url }}" class="img-fluid rounded-start" alt="...">
+                        {% else %}
+                        <img src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" class="img-fluid rounded-start"
+                            alt="...">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{cart_obj.product.product_name}}</h5>
+                            <p class="card-text">₹ {{cart_obj.product.price}}</p>
+                            <p class="card-text"><small class="text-body-secondary">Added to cart on: {{cart_obj.created_date}}</small>
+                            </p>
+                            <p class="card-text"><small class="text-body-secondary">Qty: {{cart_obj.quantity}}</small>
+                            </p>
+                            <p class="card-text"><small class="text-body-secondary">Status: {{cart_obj.status}}</small>
+                            </p>
+                            <a class="btn btn-outline-dark flex-shrink-0" href="{% url 'check-out' cart_obj.id %}">
+                                <i class="bi bi-bag-check me-1"></i>
+                                Place order
+                            </a>
+                            <a class="btn btn-outline-dark flex-shrink-0" href="{% url 'cart-delete' cart_obj.id %}">
+                                <i class="bi bi-trash me-1"></i>
+                                Delete item
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
